@@ -1,4 +1,8 @@
 .*~
 *~
+*.o
+*.elf
+*.DS_Store
+
 /build
 /tools

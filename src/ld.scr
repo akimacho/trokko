@@ -1,0 +1,38 @@
+/*
+ ============================================================================
+    Name        : ld.scr
+    Description : linker script
+ ============================================================================
+*/
+/* OUTPUT_FORMAT("elf32-h8300") */
+OUTPUT_ARCH(h8300h)
+ENTRY("_start")
+
+SECTIONS
+{
+    /* leading address */
+    . = 0x0;
+    /* interrupt vector */
+    .vectors : {
+        vector.o(.data)
+    }
+    /* text segment */
+    .text : {
+        *(.text)
+    }
+    /* readonly data segment */
+    .rodata : {
+        *(.strings)
+        *(.rodata)
+        *(.rodata.*)
+    }
+    /* data segment */
+    .data : {
+        *(.data)
+    }
+    /* block started by symbol segment */
+    .bss : {
+        *(.bss)
+        *(COMMON)
+    }
+}

@@ -22,7 +22,7 @@ STRIP   = $(BINDIR)/$(ADDNAME)strip
 H8WRITE = ../tools/kz_h8write
 
 # serial connection destination
-H8WRITE_SERDEV = /dev/tty.usbserial-XXX
+H8WRITE_SERDEV = /dev/tty.usbserial-FTK1TC2I
 
 # compile source code
 OBJS    = vector.o startup.o main.o

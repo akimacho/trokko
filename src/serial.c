@@ -18,12 +18,12 @@
 
 /* registers of SCI */
 struct h8_3069f_sci {
-    volatile uint8 smr;     /* serial mode register */
-    volatile uint8 brr;     /* bit rate register */ 
-    volatile uint8 scr;     /* serial control register */
-    volatile uint8 tdr;     /* transmit data register */
-    volatile uint8 ssr;     /* serial status register */
-    volatile uint8 rdr;     /* receive data register */
+    volatile uint8 smr;     /* serial mode register to setup mode of serial communication*/
+    volatile uint8 brr;     /* bit rate register to setup baudrate*/ 
+    volatile uint8 scr;     /* serial control register: whether the transmission and reception are enabled */
+    volatile uint8 tdr;     /* transmit data register to write a single character */
+    volatile uint8 ssr;     /* serial status register : reception completion and transmission completion */
+    volatile uint8 rdr;     /* receive data register to receive a single character*/
     volatile uint8 scmr;    /* smart card mode register */
 };
 
@@ -63,8 +63,8 @@ struct h8_3069f_sci {
 static struct {
     volatile struct h8_3069f_sci *sci;
 } regs[SERIAL_SCI_NUM] = {
-    { H8_3069F_SCI0 }, 
-    { H8_3069F_SCI1 }, 
+    { H8_3069F_SCI0 },
+    { H8_3069F_SCI1 }, /* for serial communication */
     { H8_3069F_SCI2 }, 
 };
 
@@ -73,7 +73,15 @@ int serial_init(int index)
 {
     volatile struct h8_3069f_sci *sci = regs[index].sci;
 
-    sci->scr = 0;
+    sci->scr = 0; /* invalidate the serial control register */
+    /*
+     * baud rate             : 9600bps
+     * data length           : 8bit
+     * stop bit length       : 1bit
+     * non-parity
+     * hardware flow control : off
+     * software flow control : off
+     */
     sci->smr = 0;
     sci->brr = 64;  /* generate a 9600bps from 20MHz clock */
     sci->scr = H8_3069F_SCI_SCR_RE | H8_3069F_SCI_SCR_TE; /* ready to send and receive */
@@ -86,6 +94,7 @@ int serial_init(int index)
 int serial_is_send_enable(int index)
 {
     volatile struct h8_3069f_sci *sci = regs[index].sci;
+
     return (sci->ssr & H8_3069F_SCI_SSR_TDRE);
 }
 
@@ -97,8 +106,9 @@ int serial_send_byte(int index, unsigned char c)
     /* wait until serial device can send */
     while (!serial_is_send_enable(index))
         ;
-    sci->tdr = c;
-    sci->ssr &= ~H8_3069F_SCI_SSR_TDRE; /* transmission start */
+
+    sci->tdr = c; /* write a single charactor */
+    sci->ssr = sci->ssr & ~H8_3069F_SCI_SSR_TDRE; /* transmission start */
 
     return 0;
 }

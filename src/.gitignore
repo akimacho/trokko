@@ -5,4 +5,4 @@ GRTAGS
 GTAGS
 *.elf
 *.mot
-
+*.o

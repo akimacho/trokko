@@ -8,6 +8,7 @@
 #include "defines.h"
 #include "serial.h"
 #include "lib.h"
+#include "assert.h"
 
 int main(void)
 {
@@ -15,10 +16,10 @@ int main(void)
 
     puts("Hello World!\n");
     
-    putxval(0x10, 0);
-    puts("\n");
-    putxval(0xffff, 0);
-    puts("\n");
+    ASSERT(0x10);
+    ASSERT(0x0);
+    ASSERT(0x10 < 0xffff);
+    ASSERT(0x10 > 0xffff);
 
     while (1)
         ;

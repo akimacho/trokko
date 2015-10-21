@@ -12,14 +12,18 @@
 
 int main(void)
 {
+    char dst[25] = "abc";
+    char src[]   = "efg";
+
     serial_init(SERIAL_DEFAULT_DEVICE);
 
     puts("Hello World!\n");
-    
-    ASSERT(0x10);
-    ASSERT(0x0);
-    ASSERT(0x10 < 0xffff);
-    ASSERT(0x10 > 0xffff);
+
+    ASSERT(123 == atoi("123"));
+    ASSERT(123 == atoi("12a3"));
+
+    strcat(dst, src);
+    ASSERT(strcmp(dst, "abcdef"));
 
     while (1)
         ;

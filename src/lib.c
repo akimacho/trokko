@@ -142,3 +142,37 @@ int strncmp(const char *s1, const char *s2, int len)
     return 0;
 }
 
+/* convert string to integer */
+int atoi(const char *s)
+{
+    int integer = 0;
+    
+    do {
+        if ('0' <= *s && *s <= '9') 
+            integer = integer * 10 + (*s - '0');
+    } while(*s++);
+    return integer;
+}
+
+/* concat two strings */
+char *strcat(char *dst, const char *src)
+{
+    char *d = dst;
+
+    while (*dst)
+        dst++;
+    strcpy(dst, src);
+    return d;
+}
+
+/* concat two strings up to length */
+char *strncat(char *dst, const char *src, int len)
+{
+    char *d = dst;
+
+    while (*dst)
+        dst++;
+    strncmp(dst, src, len);
+    return d;
+}
+

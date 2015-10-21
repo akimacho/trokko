@@ -35,6 +35,12 @@ char *strcpy(char *dst, const char *src);
 int strcmp(const char *s1, const char *s2);
 /* compare the string by specifying the length */
 int strncmp(const char *s1, const char *s2, int len);
+/* convert string to integer */
+int atoi(const char *s);
+/* concat two strings */
+char *strcat(char *dst, const char *src);
+/* concat two strings up to length */
+char *strncat(char *dst, const char *src, int len);
 
 #endif /* _LIB_H_INCLUDED_ */
 

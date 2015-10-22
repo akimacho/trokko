@@ -9,7 +9,8 @@
 #       .type    _start,@function
 _start:
         # set up stack pointer
-        mov.l    #0xffff00,sp
+        # _start is a symbol in linker script
+        mov.l    #_stack,sp
         # call main function
         jsr      @_main
 1:

@@ -12,21 +12,48 @@
 /***************************************************************************
  * I/O
  ***************************************************************************/
+/*** INPUT ***/
+/* get a single character */
+unsigned char getc(void)
+{
+    unsigned char c = serial_recv_byte(SERIAL_DEFAULT_DEVICE);
+    c = (c == '\r') ? '\n' : c; /* convert a new line code */
+    putc(c); /* echo-back */
+    return c;
+}
 
+/* get a string */
+int gets(unsigned char *buf)
+{
+    int i = 0;
+    unsigned char c;
+    do {
+        c = getc();
+        if (c == '\n') {
+            c = '\0';
+        }
+        buf[i++] = c;
+    } while (c);
+    return i - 1;
+}
+
+/*** OUTPUT ***/
 /* send single charactor */
 int putc(unsigned char c)
 {
-    /* convert the new line code */
-    if (c == '\n')
+    /* convert a new line code */
+    if (c == '\n') {
         serial_send_byte(SERIAL_DEFAULT_DEVICE, '\r');
+    }
     return serial_send_byte(SERIAL_DEFAULT_DEVICE, c);
 }
 
 /* send string */
 int puts(unsigned char *str)
 {
-    while (*str)
+    while (*str) {
         putc(*(str++));
+    }
     return 0;
 }
 
@@ -40,8 +67,9 @@ int putxval(unsigned long value, int column)
     p = buf + sizeof(buf) - 1;
     *(p--) = '\0';
 
-    if (!value && !column)
+    if (!value && !column) {
         column++;
+    }
 
     while (value || column) {
         *(p--) = "0123456789abcdef"[value & 0xf];/* 0xf:0b1111 */
@@ -63,8 +91,9 @@ void *memset(void *b, int c, long len)
 {
     char *p;
 
-    for (p = b; len > 0; len--) 
+    for (p = b; len > 0; len--) {
         *(p++) = c;
+    }
     return b;
 }
 
@@ -74,8 +103,9 @@ void *memcpy(void *dst, const void *src, long len)
     char *d = dst;
     const char *s = src;
     
-    for (; len > 0; len--) 
+    for (; len > 0; len--) {
         *(d++) = *(s++);
+    }
     return dst;
 }
 
@@ -86,8 +116,9 @@ int memcmp(const void *b1, const void *b2, long len)
     const char *p2 = b2;
     
     for (; len > 0; len--) {
-        if (*p1 != *p2) 
+        if (*p1 != *p2) {
             return (*p1 > *p2) ? 1 : -1;
+        }
         p1++;
         p2++;
     }
@@ -99,8 +130,9 @@ int strlen(const char *s)
 {
     int len;
 
-    for (len = 0; *s; s++, len++)
+    for (len = 0; *s; s++, len++) {
         ;
+    }
     return len;
 }
 
@@ -111,8 +143,9 @@ char *strcpy(char *dst, const char *src)
 
     for (;; dst++, src++) {
         *dst = *src;
-        if (!(*src))
+        if (!(*src)) {
             break;
+        }
     }
     return d;
 }
@@ -121,8 +154,9 @@ char *strcpy(char *dst, const char *src)
 int strcmp(const char *s1, const char *s2)
 {
     while (*s1 || *s2) {
-        if (*s1 != *s2)
+        if (*s1 != *s2) {
             return (*s1 > *s2) ? 1 : -1;
+        }
         s1++;
         s2++;
     }
@@ -133,8 +167,9 @@ int strcmp(const char *s1, const char *s2)
 int strncmp(const char *s1, const char *s2, int len)
 {
     while ((*s1 || *s2) && (len > 0)) {
-        if (*s1 != *s2)
+        if (*s1 != *s2) {
             return (*s1 > *s2) ? 1 : -1;
+        }
         s1++;
         s2++;
         len--;
@@ -148,8 +183,9 @@ int atoi(const char *s)
     int integer = 0;
     
     do {
-        if ('0' <= *s && *s <= '9') 
+        if ('0' <= *s && *s <= '9') {
             integer = integer * 10 + (*s - '0');
+        }
     } while(*s++);
     return integer;
 }
@@ -159,8 +195,9 @@ char *strcat(char *dst, const char *src)
 {
     char *d = dst;
 
-    while (*dst)
+    while (*dst) {
         dst++;
+    }
     strcpy(dst, src);
     return d;
 }
@@ -170,8 +207,9 @@ char *strncat(char *dst, const char *src, int len)
 {
     char *d = dst;
 
-    while (*dst)
+    while (*dst) {
         dst++;
+    }
     strncmp(dst, src, len);
     return d;
 }

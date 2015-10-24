@@ -11,12 +11,19 @@
 /***************************************************************************
  * I/O
  ***************************************************************************/
-/* send single charactor */
+/*** INPUT ***/
+/* get a single character */
+unsigned char getc(void);
+/* get a string */
+int gets(unsigned char *buf);
+/*** OUTPUT ***/
+/* send a single charactor */
 int putc(unsigned char c);
-/* send string */
+/* send a string */
 int puts(unsigned char *str);
 /* display a number in hexadecimal*/
 int putxval(unsigned long value, int column);
+
 
 /***************************************************************************
  * Utilities

@@ -5,7 +5,7 @@ Embedded operating system based on KOZOS & uITRON
 
 ## Target board
 
-H8/3069F
+* H8/3069F
 
 ## Requirement
 
@@ -15,4 +15,4 @@ H8/3069F
 
 ## Author
 
-[akimacho](https://github.com/akimacho)
+* [akimacho](https://github.com/akimacho)

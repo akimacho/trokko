@@ -26,7 +26,7 @@ H8WRITE_SERDEV = /dev/tty.usbserial-FTK1TC2I
 
 # compile source code
 OBJS    = vector.o startup.o main.o
-OBJS   += lib.o serial.o xmodem.o
+OBJS   += lib.o serial.o xmodem.o elf.o
 
 # executable file
 TARGET  = trokkoload

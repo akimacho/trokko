@@ -8,7 +8,8 @@
 #include "defines.h"
 #include "serial.h"
 #include "lib.h"
-#include "kz_xmodem.h"
+#include "elf.h"
+#include "xmodem.h"
 
 /*** initialize memory and serial device ***/
 static int init(void)
@@ -95,6 +96,8 @@ int main(void)
             putxval(size, 0);
             puts("\n");
             dump(loadbuf, size);
+        } else if (!strcmp(buf, "run")) { /* execute ELF-format-file */
+            elf_load(loadbuf); /* load file on memory */
         } else if (!strcmp(buf, "hello")) { 
             puts("Hello, I'm trokko!\n");
         } else { /* otherwise */

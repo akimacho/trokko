@@ -1,5 +1,5 @@
 # ============================================================================
-#   Name        : Makefile
+#   Name        : Makefile for operating system
 # ============================================================================
 
 PREFIX  = ~/Projects/trokko/tools
@@ -18,24 +18,18 @@ OBJDUMP = $(BINDIR)/$(ADDNAME)objdump
 RANLIB  = $(BINDIR)/$(ADDNAME)ranlib
 STRIP   = $(BINDIR)/$(ADDNAME)strip
 
-# flash ROM Writer
-H8WRITE = ../tools/kz_h8write
-
-# serial connection destination
-H8WRITE_SERDEV = /dev/tty.usbserial-FTK1TC2I
-
 # compile source code
-OBJS    = vector.o startup.o main.o
-OBJS   += lib.o serial.o xmodem.o elf.o
+OBJS    = startup.o main.o
+OBJS   += lib.o serial.o
 
 # executable file
-TARGET  = trokkoload
+TARGET  = trokko
 
 # compile options
 CFLAGS  = -Wall -mh -nostdinc -nostdlib -fno-builtin
 CFLAGS += -I.
 CFLAGS += -Os
-CFLAGS += -DKZLOAD
+CFLAGS += -DTOROKKO
 
 # link options
 LFLAGS  = -static -T ld.scr -L.
@@ -56,14 +50,6 @@ $(TARGET) :	$(OBJS)
 .s.o :		$<
 		$(CC) -c $(CFLAGS) $<
 
-$(TARGET).mot : $(TARGET)
-		$(OBJCOPY) -O srec $(TARGET) $(TARGET).mot
-
-image :		$(TARGET).mot
-
-write :		$(TARGET).mot
-		$(H8WRITE) -3069 -f20 $(TARGET).mot $(H8WRITE_SERDEV)
-
 clean : 	
-		rm -f $(OBJS) $(TARGET) $(TARGET).elf $(TARGET).mot
+		rm -f $(OBJS) $(TARGET) $(TARGET).elf
 

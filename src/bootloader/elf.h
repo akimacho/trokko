@@ -9,7 +9,7 @@
 #define _ELF_H_INCLUDED_
 
 /*** analyze ELF-format ***/
-int elf_load(char *buf);
+char *elf_load(char *buf);
 
 #endif /* _ELF_H_INCLUDED_ */
 

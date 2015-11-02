@@ -70,15 +70,17 @@ int main(void)
 {
     static char buf[16]; /* 128byte buffer */
     static long size = -1; /* received buffer-size */
-    static unsigned char *loadbuf = NULL;
+    static unsigned char *loadbuf = NULL; /* buffuer to load a file-data */
     extern int buffer_start; /* buffer defined by linker script */
+    char *entry_point; /* entry point */
+    void (*entry_proc)(void); /* function-pointer for execute function from entry point */
 
     init();
 
-    puts("trokko boot loader started. \n");
+    puts("trokko_loader started. \n");
 
     while (1) {
-        puts("trokko > "); /* display a prompt */
+        puts("trokko_loader > "); /* display a prompt */
         gets(buf); /* get command from serial communication */
 
         if (!strcmp(buf, "load")) { /* download a file on XMODEM */
@@ -97,7 +99,17 @@ int main(void)
             puts("\n");
             dump(loadbuf, size);
         } else if (!strcmp(buf, "run")) { /* execute ELF-format-file */
-            elf_load(loadbuf); /* load file on memory */
+            entry_point = elf_load(loadbuf); /* load file on memory */
+            if (!entry_point) {
+                puts("run error!\n");
+            } else {
+                puts("*** starting from entry point ***");
+                putxval((unsigned long)entry_point, 0);
+                puts("\n");
+
+                entry_proc = (void (*)(void))entry_point;
+                entry_proc(); /* start process */
+            }
         } else if (!strcmp(buf, "hello")) { 
             puts("Hello, I'm trokko!\n");
         } else { /* otherwise */

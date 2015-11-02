@@ -97,6 +97,7 @@ static int elf_load_program(struct elf_header *header)
             continue;
         }
 
+#if DEBUG
         /* display some segment infomation */
         putxval(phdr->offset,        6); puts(" ");
         putxval(phdr->virtual_addr,  8); puts(" ");
@@ -105,26 +106,35 @@ static int elf_load_program(struct elf_header *header)
         putxval(phdr->memory_size,   5); puts(" ");
         putxval(phdr->flags,         2); puts(" ");
         putxval(phdr->align,         2); puts("\n");
+#endif /* DEBUG */
+        
+        /* execute loading looking int infomation of segmaents */
+        memcpy((char *)phdr->physical_addr, (char *)header + phdr->offset, 
+                phdr->file_size);
+        /* for BSS section */
+        memset((char *)phdr->physical_addr + phdr->file_size, 0, 
+                phdr->memory_size - phdr->file_size);
     }
 
     return 0;
 }
 
 /*** analyze ELF-format ***/
-int elf_load(char *buf)
+char *elf_load(char *buf)
 {
     struct elf_header *header = (struct elf_header *)buf;
 
     /* check ELF header */
     if (elf_check(header) < 0) {
-        return -1;
+        return NULL;
     }
 
-    /* load segments */
+    /* load in a segment */
     if (elf_load_program(header) < 0) {
-        return -1;
+        return NULL;
     }
-
-    return 0;
+    
+    /* return entry_point */
+    return (char *)header->entry_point;
 }
 
